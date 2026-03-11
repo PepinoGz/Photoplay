@@ -16,6 +16,7 @@ The repository currently focuses on the following specifications:
 
 - **[System Architecture Guide](DOCS/SYSTEM_OVERVIEW.md)**: A deep dive into the PTS-DOS environment, the boot sequence, hardware detection (motherboards, sound chips), and touch interface logic.
 - **[High Score (.HIS) Format](DOCS/HIS_FORMAT.md)**: A detailed binary specification of the high-score database used by Funworld games, including the custom 1990 epoch date system.
+- **[Asset Container (.WAD) Format](DOCS/WAD_FORMAT.md)**: A technical breakdown of the encrypted resource archives, the XOR 0x55 cipher, and the internal file indexing system.
 
 ---
 
