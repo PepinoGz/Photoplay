@@ -107,19 +107,25 @@ The machine's current language preference is stored in:
 
 ---
 
-## 6. Security & Dongle Architecture
-The PhotoPlay system uses a hardware-based security scheme (dongle) to prevent unauthorized distribution and verify licensing.
+## 6. Security & Hardware Protection
+The PhotoPlay platform employs a hardware-based security system designed to prevent unauthorized distribution, enforce licensing, and uniquely identify machine hardware.
 
-### Hardware Interface (`INT 60h`)
-The primary communication between the software and the physical dongle occurs via the **Interrupt 60h** vector. 
-- The menu system (`MENU.EXE`) and individual games (`\EXE\*.EXE`) perform periodic calls to `INT 60h` to verify heartbeats and license signatures.
-- **Fail-safe Logic**: If the hardware is not detected or the challenge-response fails, the software triggers an `"IDONGLE not found"` error or a hard freeze.
+### Smart Card Dongle Mechanism
+The system utilizes a **Smart Card Reader** (ISO 7816) typically connected to a serial interface (COM port).
+- **The Card**: A security-hardened smart card (often in SIM form factor) acts as a **Secure Access Module (SAM)**. It contains protected memory for license keys and a cryptographic co-processor.
+- **Protocol**: The software communicates via a **Challenge-Response** protocol. The application sends a unique "challenge" to the card, which calculates a signed response using an internal, non-exportable private key.
+- **Identity Enforcement**: The card stores the cabinet's unique serial number and its authorized "Machine Class" (e.g., Smart, Masters).
 
-### Multi-Level Protection
-Security is not centralized in a single check but distributed across layers:
-1.  **Boot Phase**: The main launcher verifies the dongle before loading the user interface.
-2.  **Game Launch**: Each game executable in the `\EXE` directory contains its own secondary protection loop, ensuring that games cannot be launched even if the main menu is bypassed.
-3.  **Feature Licensing**: The visibility of specific game categories is tied to the license state stored within the dongle and reflected in `FOTO\GAMESTAT.DAT`.
+### Multi-Level Software Integration
+The protection is deeply integrated into the entire application stack:
+1. **The Shell Handler (`MENU.EXE`)**: Performs the initial hardware handshake. If the device is unresponsive or the signature is invalid, it triggers an "illegal version" or "dongle not found" halt before the main GUI loads.
+2. **Individual Game Binaries (`\EXE\*.EXE`)**: Every game executable contains its own verification routines. This ensures that hardware must be present for any gameplay to occur, even if the menu is bypassed.
+3. **Dynamic Resource Decryption**: System resources (such as specific bitmaps) may require hardware-derived keys to be properly parsed by the engine.
+
+### System Bypass (Bypass Architecture)
+Hardware protection can theoretically be bypassed through targeted binary modification of the system executables.
+- **Instruction Patching**: This involves locating the specific memory offsets for conditional jump instructions (e.g., `JZ` - Jump if Zero) that follow a security check. By replacing these with unconditional jumps (`JMP`) or `NOP` (No Operation) bytes, the software can be "forced" to ignore the absence of hardware.
+- **Layered Bypass**: Because the protection is distributed, a complete system bypass requires patching both the main shell (`MENU.EXE`) and every individual game executable in the `\EXE` directory to ensure seamless operation without hardware.
 
 ---
 
