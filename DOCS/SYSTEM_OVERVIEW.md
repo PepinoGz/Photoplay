@@ -21,7 +21,7 @@ The system boot process is a multi-stage sequence designed to initialize hardwar
 The `CONFIG.PTS` (equivalent to `CONFIG.SYS`) handles the early environment:
 - **`install = \foto\logo.com`**: Immediately displays the "PhotoPlay" splash screen before the CLI appears.
 - **`device = \SOUND\himem.sys`**: Extended memory manager (driver variant for specific sound support).
-- **`device = \ptsdos\ramdisk.sys 12M /E`**: Creates a **12MB RAM Drive**. This is crucial for temporary game data and logs to avoid SSD/HDD wear and increase speed.
+- **`device = \ptsdos\ramdisk.sys 12M /E`**: Creates a **12MB RAM Drive**. This is crucial for temporary game data and logs to avoid HDD wear and increase speed.
 - **`shell = \PTSDOS\command.com \PTSDOS /p \AUTOPTS.BAT`**: Defines the final shell script.
 
 ### Stage 2: AUTOPTS.BAT (The Master Script)
