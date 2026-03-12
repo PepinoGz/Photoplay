@@ -116,6 +116,11 @@ The system utilizes a **Smart Card Reader** (ISO 7816) typically connected to a 
 - **Protocol**: The software communicates via a **Challenge-Response** protocol. The application sends a unique "challenge" to the card, which calculates a signed response using an internal, non-exportable private key.
 - **Identity Enforcement**: The card stores the cabinet's unique serial number and its authorized "Machine Class" (e.g., Smart, Masters).
 
+### Legacy Protection (PTS-DOS Versions)
+Earlier PTS-DOS versions used a combination of:
+- **Dallas Button Dongle**: A 1-Wire iButton device for unique identification.
+- **Parallel Dongle**: A hardware key connected to the **LPT port**.
+
 ### Multi-Level Software Integration
 The protection is deeply integrated into the entire application stack:
 1. **The Shell Handler (`MENU.EXE`)**: Performs the initial hardware handshake. If the device is unresponsive or the signature is invalid, it triggers an "illegal version" or "dongle not found" halt before the main GUI loads.
@@ -126,6 +131,17 @@ The protection is deeply integrated into the entire application stack:
 Hardware protection can theoretically be bypassed through targeted binary modification of the system executables.
 - **Instruction Patching**: This involves locating the specific memory offsets for conditional jump instructions (e.g., `JZ` - Jump if Zero) that follow a security check. By replacing these with unconditional jumps (`JMP`) or `NOP` (No Operation) bytes, the software can be "forced" to ignore the absence of hardware.
 - **Layered Bypass**: Because the protection is distributed, a complete system bypass requires patching both the main shell (`MENU.EXE`) and every individual game executable in the `\EXE` directory to ensure seamless operation without hardware.
+
+---
+
+## 7. Platform Generations & Evolution
+The PhotoPlay platform evolved across several operating systems and hardware generations:
+
+| Generation | Operating System | Hardware / Notes |
+| :--- | :--- | :--- |
+| **Original / Masters** | **PTS-DOS** | Initial versions (like IGO8). Used Dallas/Parallel dongles. |
+| **NG1** | **Windows 98** | Next Generation 1. Transition to Windows-based GUI. |
+| **NG2** | **Windows XP** | Next Generation 2. Modernized platform for later cabinets. |
 
 ---
 
